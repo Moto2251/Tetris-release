@@ -145,7 +145,11 @@ let Score = {
     
     AddScore : function() {
         this.score += 100;
-    }
+    },
+
+    ResetScore : function() {
+        this.score = 0;
+    },
 }
 
 let Screen = {
@@ -412,6 +416,9 @@ const init = () => {
 
     // 初期化
     Controller.CreateNewTet();
+    Score.ResetScore();
+    Player.Flag_Gameover = false;
+    
 
     // 一定周期で落下処理
     Player.timerId = setInterval(Update, GameSettings.DROP_SPEED);
@@ -430,7 +437,7 @@ const Update = () => {
 
 //キー入力
 document.onkeydown = (e) => {
-    if(Player.Flag_Gameover) return;
+    
 
     switch(e.code) {
         case 'ArrowLeft':
@@ -467,24 +474,33 @@ document.onkeydown = (e) => {
         
         // ホールド
         case 'Space':
+            if(Player.Flag_Gameover) return;
             // Controller.Hold();
             break;
 
         // リスタート
         case 'KeyR':
             clearInterval(Player.timerId);
-            // init()とほぼ同じ
-            // Screen.screen を初期化
-            for(let y=0; y<GameSettings.PLAY_SCREEN_HEIGHT+GameSettings.UpperMargin; y++) {
-                Screen.screen[y] = [];
-                for(let x=0; x<GameSettings.PLAY_SCREEN_WIDTH; x++) {
-                    Screen.screen[y][x] = 0;
-                }
-            }
-            // 初期化
-            Controller.CreateNewTet();
-            // 一定周期で落下処理
-            Player.timerId = setInterval(Update, GameSettings.DROP_SPEED);
+
+            // // init()とほぼ同じ
+            
+            // // スコアの初期化
+            // Score.ResetScore();
+
+            // // Screen.screen を初期化
+            // for(let y=0; y<GameSettings.PLAY_SCREEN_HEIGHT+GameSettings.UpperMargin; y++) {
+            //     Screen.screen[y] = [];
+            //     for(let x=0; x<GameSettings.PLAY_SCREEN_WIDTH; x++) {
+            //         Screen.screen[y][x] = 0;
+            //     }
+            // }
+            // // 初期化
+            // Controller.CreateNewTet();
+            // // 一定周期で落下処理
+            // Player.timerId = setInterval(Update, GameSettings.DROP_SPEED);
+
+            init();
+
             break;
     }
     Canvas.DrawPlayScreen();
